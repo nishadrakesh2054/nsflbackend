@@ -38,14 +38,10 @@ if (!fs.existsSync(tempDir)) {
 // CORS configuration
 const allowedOrigins = [
   "*",
-  "https://172.16.5.205",
-  "http://172.16.5.205",
-  "http://172.16.5.205:3000",
-  "https://172.16.5.205:3000",
   "http://localhost:3000",
   "http://localhost:5173",
-  "http://localhost:5174",
   "https://nsflbackend.onrender.com",
+  " https://nsfl-fullstack.vercel.app",
 ];
 
 const corsOptions = {
