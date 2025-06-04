@@ -22,17 +22,33 @@ const Player = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    JerseyNumber: {
+    appearance: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+    },
+    cleansheet: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    goals: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    yellowcards: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    redcards: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     nationality: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    age: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    dateofbirth: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
     },
     height: {
       type: DataTypes.STRING,
@@ -42,9 +58,7 @@ const Player = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    achievements: {
-      type: DataTypes.TEXT,
-    },
+
     imageKey: {
       type: DataTypes.STRING,
       allowNull: true,

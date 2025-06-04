@@ -1,8 +1,7 @@
 import express from "express";
 import Team from "../models/fixture/team.Model.js";
 import Player from "../models/fixture/player.Model.js";
-import TeamHistory from "../models/fixture/teamHistory.Model.js";
-import TeamStatistics from "../models/fixture/teamStats.Model.js";
+import MatchEvent  from "../models/fixture/matchEvent.Model.js";
 import Match from "../models/fixture/match.Model.js";
 
 const router = express.Router();
@@ -20,19 +19,6 @@ router.get("/teams", async (req, res) => {
     const teams = await Team.findAll({
       attributes: { exclude: ["createdAt", "updatedAt"] },
       order: [["team_name", "ASC"]],
-      include: [
-        {
-          model: TeamStatistics,
-          attributes: [
-            "matchesPlayed",
-            "wins",
-            "draws",
-            "losses",
-            "goalsScored",
-            "goalsConceded",
-          ],
-        },
-      ],
     });
 
     if (!teams.length) {
@@ -64,41 +50,12 @@ router.get("/teams/:id", async (req, res) => {
             "id",
             "name",
             "position",
-            "JerseyNumber",
+
             "img",
             "imageKey",
             "bucket",
             "mime",
           ],
-        },
-        {
-          model: TeamStatistics,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: TeamHistory,
-          as: "teamHistories",
-          include: [
-            {
-              model: Team,
-              as: "opponent",
-              attributes: [
-                "id",
-                "team_name",
-                "team_logo",
-                "imageKey",
-                "bucket",
-                "mime",
-              ],
-            },
-            {
-              model: Match,
-              as: "match",
-              attributes: ["id", "match_date", "venue"],
-            },
-          ],
-          order: [["matchDate", "DESC"]],
-          limit: 5,
         },
       ],
     });
@@ -179,7 +136,7 @@ router.get("/teams/:id/players", async (req, res) => {
     const players = await Player.findAll({
       where: { team_id: req.params.id },
       attributes: { exclude: ["createdAt", "updatedAt"] },
-      order: [["JerseyNumber", "ASC"]],
+      //   order: [[ "ASC"]],
     });
 
     if (!players.length) {
@@ -273,18 +230,6 @@ router.get("/match", async (req, res) => {
       ],
     });
 
-    // const updatedFixtures = fixtures.map((fixture) => {
-    //   const fixtureData = fixture.toJSON();
-    //   if (fixture.isCompleted()) {
-    //     fixtureData.status = "completed";
-    //   } else if (fixture.isLive()) {
-    //     fixtureData.status = "today";
-    //   } else if (fixture.isToday()) {
-    //     fixtureData.status = "upcoming";
-    //   }
-    //   return fixtureData;
-    // });
-
     res.status(200).json({
       success: true,
       count: fixtures.length,
@@ -316,12 +261,6 @@ router.get("/match/:id", async (req, res) => {
             "mime",
             "stadium",
           ],
-          include: [
-            {
-              model: TeamStatistics,
-              attributes: ["wins", "draws", "losses"],
-            },
-          ],
         },
         {
           model: Team,
@@ -335,10 +274,22 @@ router.get("/match/:id", async (req, res) => {
             "mime",
             "stadium",
           ],
+        },
+        {
+          model: MatchEvent ,
+          as: "events",
+          attributes: ["id", "eventType", "eventTime", "teamId", "playerId"],
           include: [
             {
-              model: TeamStatistics,
-              attributes: ["wins", "draws", "losses"],
+              model: Player,
+              attributes: [
+                "id",
+                "name",
+                "img",
+                "imageKey",
+                "bucket",
+                "mime",
+              ],
             },
           ],
         },
@@ -351,64 +302,6 @@ router.get("/match/:id", async (req, res) => {
     res.status(200).json({ success: true, data: match });
   } catch (error) {
     handleError(res, error, "match");
-  }
-});
-
-// Get all team histories
-router.get("/teamhistory", async (req, res) => {
-  try {
-    const histories = await TeamHistory.findAll({
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-      include: [
-        { model: Team, as: "team" },
-        { model: Team, as: "opponent" },
-        { model: Match, as: "match" },
-      ],
-    });
-
-    if (!histories.length) {
-      return res.status(404).json({
-        success: false,
-        message: "No histories  found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      count: histories.length,
-      data: histories,
-    });
-  } catch (error) {
-    handleError(res, error, "histories ");
-  }
-});
-
-// Get history for a specific team
-router.get("/teamhistory/:teamId", async (req, res) => {
-  try {
-    const { teamId } = req.params;
-    const histories = await TeamHistory.findAll({
-      where: { teamId },
-      include: [
-        { model: Team, as: "opponent" },
-        { model: Match, as: "match" },
-      ],
-      order: [["matchDate", "DESC"]],
-    });
-
-    if (!histories.length) {
-      return res.status(404).json({
-        success: false,
-        message: "No histories  found",
-      });
-    }
-    res.status(200).json({
-      success: true,
-      count: histories.length,
-      data: histories,
-    });
-  } catch (error) {
-    handleError(res, error, "histories ");
   }
 });
 

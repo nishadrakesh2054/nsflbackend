@@ -1,13 +1,14 @@
 import AdminJSSequelize from "@adminjs/sequelize";
 import uploadFeature from "@adminjs/upload";
 import AdminJS from "adminjs";
+
 // import { ComponentLoader } from "adminjs";
 import { componentLoader } from "../components/componentsLoader.js";
 import Team from "../models/fixture/team.Model.js";
 import Player from "../models/fixture/player.Model.js";
 import Match from "../models/fixture/match.Model.js";
 import Table from "../models/fixture/table.Model.js";
-import TeamStatistics from "../models/fixture/teamStats.Model.js";
+import MatchEvent from "../models/fixture/matchEvent.Model.js";
 import LiveStreamingVideo from "../models/fixture/LiveStreaming.Model.js";
 
 AdminJS.registerAdapter(AdminJSSequelize);
@@ -140,23 +141,21 @@ export const playerResource = {
       "name",
       "file",
       "position",
-      "JerseyNumber",
       "teamId",
       "nationality",
-      "age",
+      "dateofbirth",
     ],
     showProperties: [
       "id",
       "name",
       "file",
       "position",
-      "JerseyNumber",
+
       "teamId",
       "nationality",
-      "age",
+      "dateofbirth",
       "height",
       "weight",
-      "achievements",
     ],
     properties: {
       id: { isVisible: false, position: 1 },
@@ -176,27 +175,26 @@ export const playerResource = {
           { value: "Forward", label: "Forward" },
         ],
       },
-      JerseyNumber: { isVisible: true, position: 5 },
+      appearance: { position: 5 },
+      cleansheet: { position: 6 },
+      goals: { position: 7 },
+      yellowcards: { position: 8 },
+      redcards: { position: 9 },
       teamId: {
         isVisible: true,
-        position: 6,
+        position: 10,
         reference: "Teams",
       },
-      nationality: { isVisible: true, position: 7 },
-      age: { isVisible: true, position: 8 },
-      height: { isVisible: true, position: 9 },
-      weight: { isVisible: true, position: 10 },
-      achievements: {
-        type: "textarea",
-        props: { rows: 4 },
-        isVisible: { list: false, edit: true, filter: false, show: true },
-        position: 11,
-      },
-      imageKey: { isVisible: false, position: 12 },
-      bucket: { isVisible: false, position: 13 },
-      mime: { isVisible: false, position: 14 },
-      createdAt: { isVisible: false, position: 15 },
-      updatedAt: { isVisible: false, position: 16 },
+      nationality: { position: 11 },
+      dateofbirth: { position: 12, isVisible: true, type: "date" },
+      height: { position: 13 },
+      weight: { position: 14 },
+
+      imageKey: { isVisible: false, position: 15 },
+      bucket: { isVisible: false, position: 16 },
+      mime: { isVisible: false, position: 17 },
+      createdAt: { isVisible: false, position: 18 },
+      updatedAt: { isVisible: false, position: 19 },
     },
   },
   features: [
@@ -252,10 +250,9 @@ export const matchFixtureResource = {
       "match_date",
       "time",
       "venue",
+      "week",
       "homeTeamId",
       "awayTeamId",
-      //   "homeTeam.team_name:homeTeam",
-      //   "awayTeam.team_name:awayTeam",
       "status",
       "scoreHome",
       "scoreAway",
@@ -265,6 +262,7 @@ export const matchFixtureResource = {
       "match_date",
       "time",
       "venue",
+      "week",
       "homeTeamId",
       "awayTeamId",
       "status",
@@ -344,12 +342,16 @@ export const matchFixtureResource = {
         isVisible: { list: false, show: true, edit: false },
         position: 14,
       },
+      week: {
+        isVisible: { list: true, show: true, edit: true },
+        position: 15,
+      },
     },
   },
 };
 
-export const teamStatisticsResource = {
-  resource: TeamStatistics,
+export const MatchEventsResource = {
+  resource: MatchEvent,
   options: {
     navigation: { name: "Matches", icon: "BarChart2" },
     actions: {
@@ -375,75 +377,73 @@ export const teamStatisticsResource = {
       },
     },
     listProperties: [
+      "eventType",
+      "eventTime",
+      "matchInfo",
+      "matchId",
+      "playerId",
       "teamId",
-      "matchesPlayed",
-      "wins",
-      "draws",
-      "losses",
-      "goalsScored",
-      "goalsConceded",
-      "goalDifference",
+      "createdAt",
     ],
     showProperties: [
+      "id",
+      "eventType",
+      "eventTime",
+      "matchInfo",
+      "matchId",
+      "playerId",
       "teamId",
-      "matchesPlayed",
-      "wins",
-      "draws",
-      "losses",
-      "goalsScored",
-      "goalsConceded",
-      "goalDifference",
       "createdAt",
       "updatedAt",
     ],
     properties: {
+      eventType: {
+        isVisible: true,
+        availableValues: [
+          { value: "goal", label: "Goal" },
+          { value: "yellow_card", label: "Yellow Card" },
+          { value: "red_card", label: "Red Card" },
+          { value: "own_goal", label: "Own Goal" },
+          { value: "substitution", label: "Substitution" },
+        ],
+        position: 1,
+      },
+      eventTime: {
+        isVisible: true,
+        type: "number",
+        position: 2,
+      },
+      matchId: {
+        isVisible: true,
+        reference: "matches",
+        position: 3,
+      },
+      playerId: {
+        isVisible: true,
+        reference: "Players",
+        position: 4,
+      },
       teamId: {
         isVisible: true,
-        position: 1,
         reference: "Teams",
-      },
-      matchesPlayed: {
-        isVisible: true,
-        position: 2,
-        type: "number",
-      },
-      wins: {
-        isVisible: true,
-        position: 3,
-        type: "number",
-      },
-      draws: {
-        isVisible: true,
-        position: 4,
-        type: "number",
-      },
-      losses: {
-        isVisible: true,
         position: 5,
-        type: "number",
       },
-      goalsScored: {
-        isVisible: true,
+      createdAt: {
+        isVisible: { list: true, show: true, edit: false, filter: true },
         position: 6,
-        type: "number",
       },
-      goalsConceded: {
-        isVisible: true,
-        position: 7,
-        type: "number",
+      updatedAt: {
+        isVisible: { list: false, show: true, edit: false, filter: false },
       },
-      goalDifference: {
-        isVisible: true,
-        position: 8,
-        type: "number",
+      deletedAt: {
+        isVisible: false,
       },
-      points: {
-        isVisible: true,
-        position: 9,
-        type: "number",
+      matchInfo: {
+        isVisible: { list: true, show: true, edit: false, filter: false },
+        isDisabled: true,
+        type: "string",
+        position: 3,
       },
-      createdAt: { isVisible: false, position: 10 },
-      updatedAt: { isVisible: false, position: 11 },
     },
   },
 };

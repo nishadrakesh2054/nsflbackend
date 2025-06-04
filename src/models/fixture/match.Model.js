@@ -22,10 +22,13 @@ const Match = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    week: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     status: {
-      type: DataTypes.ENUM("upcoming", "today", "completed",),
-   
- 
+      type: DataTypes.ENUM("upcoming", "completed"),
+      defaultValue: "upcoming",
     },
     scoreHome: {
       type: DataTypes.INTEGER,
@@ -81,32 +84,6 @@ Match.belongsTo(Team, { foreignKey: "homeTeamId", as: "homeTeam" });
 Match.belongsTo(Team, { foreignKey: "awayTeamId", as: "awayTeam" });
 
 // Add virtual fields for status updates
-Match.prototype.isToday = function () {
-  const today = new Date().toISOString().split("T")[0];
-  return this.match_date === today;
-};
 
-Match.prototype.isCompleted = function () {
-    return this.status === "completed" || (this.scoreHome !== null && this.scoreAway !== null);
-  };
-
-  Match.prototype.isUpcoming = function () {
-    const today = new Date().toISOString().split("T")[0];
-    return this.match_date > today;
-  };
-// Hook to auto-update status
-Match.addHook("beforeSave", (match) => {
-    const today = new Date().toISOString().split("T")[0];
   
-    if (match.scoreHome !== null && match.scoreAway !== null) {
-      match.status = "completed";
-    } else if (match.match_date === today) {
-      match.status = "today";
-    } else if (match.match_date > today) {
-      match.status = "upcoming";
-    } else {
-      // Optional: handle past matches with no scores
-      match.status = "completed"; // or "today"
-    }
-  });
 export default Match;
