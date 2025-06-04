@@ -10,7 +10,6 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import rateLimit from "express-rate-limit";
-import SequelizeStoreInit from 'connect-session-sequelize';
 
 // import morgan from "morgan";
 import session from "express-session";
@@ -69,10 +68,6 @@ const apiLimiter = rateLimit({
 // Security and logging middleware
 // app.use(morgan("dev"));
 
-const SequelizeStore = SequelizeStoreInit(session);
-const sessionStore = new SequelizeStore({
-    db: sequelize,
-  });
 app.use(cors(corsOptions));
 
 // Session configuration
@@ -81,7 +76,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: sessionStore,
+
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
