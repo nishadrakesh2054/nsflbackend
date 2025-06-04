@@ -1,26 +1,49 @@
 
 
+// import { Sequelize } from "sequelize";
+// import "dotenv/config";
+
+// const sequelize = new Sequelize(
+//   process.env.DBNAME,
+//   process.env.DBUSER,
+//   process.env.DBPASSWORD,
+//   {
+//     host: process.env.DBHOST,
+//     port: process.env.MYSQLPORT,
+//     dialect: "mysql",
+//     logging: false,
+//   }
+// );
+
+// const connect = async () => {
+//   try {
+//     await sequelize.authenticate();
+//     console.log(" MySQL Database  Connected  successfully.");
+//   } catch (error) {
+//     console.error("Unable to connect to the MySQL database:", error);
+//   }
+// };
+
+// connect();
+
+// export default sequelize;
+
+
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 
-const sequelize = new Sequelize(
-  process.env.DBNAME,
-  process.env.DBUSER,
-  process.env.DBPASSWORD,
-  {
-    host: process.env.DBHOST,
-    port: process.env.MYSQLPORT,
-    dialect: "mysql",
-    logging: false,
-  }
-);
+// Use the full connection URI from Railway
+const sequelize = new Sequelize(process.env.MYSQL_PUBLIC_URL, {
+  dialect: "mysql",
+  logging: false,
+});
 
 const connect = async () => {
   try {
     await sequelize.authenticate();
-    console.log(" MySQL Database  Connected  successfully.");
+    console.log("✅ MySQL Database Connected Successfully.");
   } catch (error) {
-    console.error("Unable to connect to the MySQL database:", error);
+    console.error("❌ Unable to connect to the MySQL database:", error);
   }
 };
 
