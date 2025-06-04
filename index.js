@@ -10,7 +10,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import rateLimit from "express-rate-limit";
-import morgan from "morgan";
+// import morgan from "morgan";
 import session from "express-session";
 
 // Application dependencies
@@ -65,7 +65,7 @@ const apiLimiter = rateLimit({
 
 // ===== Middleware Setup =====
 // Security and logging middleware
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
 // Session configuration
