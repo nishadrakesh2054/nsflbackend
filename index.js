@@ -27,6 +27,7 @@ import LiveStreaming from "./src/routes/LiveVideo.Route.js";
 
 // Initialize express app
 const app = express();
+app.set("trust proxy", 1);
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const MySQLStore = MySQLStoreFactory(session);
