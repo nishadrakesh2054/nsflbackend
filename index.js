@@ -10,6 +10,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import rateLimit from "express-rate-limit";
+import MySQLStoreFactory from "express-mysql-session";
 
 // import morgan from "morgan";
 import session from "express-session";
@@ -27,6 +28,39 @@ import LiveStreaming from "./src/routes/LiveVideo.Route.js";
 // Initialize express app
 const app = express();
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+
+const MySQLStore = MySQLStoreFactory(session);
+
+const NODE_ENV = (process.env.NODE_ENV || "development").trim().toLowerCase();
+const isProduction = NODE_ENV === "production";
+let sessionStore;
+if (isProduction && process.env.MYSQL_PUBLIC_URL) {
+  // 🔒 Parse Railway URL for express-mysql-session (since it doesn't take a full URL)
+  const dbUrl = new URL(process.env.MYSQL_PUBLIC_URL);
+
+  sessionStore = new MySQLStore({
+    host: dbUrl.hostname,
+    port: dbUrl.port,
+    user: dbUrl.username,
+    password: dbUrl.password,
+    database: dbUrl.pathname.replace("/", ""),
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000,
+  });
+} else {
+  // 🧪 Local MySQL (XAMPP)
+  sessionStore = new MySQLStore({
+    host: process.env.DBHOST || "localhost",
+    port: Number(process.env.DB_PORT) || 3306,
+    user: process.env.DBUSER || "root",
+    password: process.env.DBPASSWORD || "",
+    database: process.env.DBNAME || "nsfl",
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000,
+  });
+}
 
 // ===== Configuration =====
 // Environment setup
@@ -71,15 +105,30 @@ const apiLimiter = rateLimit({
 app.use(cors(corsOptions));
 
 // Session configuration
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET || "your-secret-key",
+//     resave: false,
+//     saveUninitialized: false,
+
+//     cookie: {
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     },
+//   })
+// );
+
+// ===== Middleware =====
 app.use(
   session({
+    key: "nsfl.sid",
     secret: process.env.SESSION_SECRET || "your-secret-key",
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
-
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: isProduction,
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
