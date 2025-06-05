@@ -192,6 +192,42 @@ router.get("/players/:id", async (req, res) => {
   }
 });
 
+router.get("/players", async (req, res) => {
+    try {
+      const players = await Player.findAll({
+        include: [
+          {
+            model: Team,
+            as: "team",
+            attributes: [
+              "id",
+              "team_name",
+              "team_logo",
+              "imageKey",
+              "bucket",
+              "mime",
+            ],
+          },
+        ],
+      });
+  
+      if (!players || players.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: "No players found",
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        data: players,
+      });
+    } catch (error) {
+      handleError(res, error, "player");
+    }
+  });
+  
+
 //matches
 router.get("/match", async (req, res) => {
   try {

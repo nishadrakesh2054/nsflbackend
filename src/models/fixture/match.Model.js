@@ -27,7 +27,7 @@ const Match = sequelize.define(
         allowNull: false,
       },
     status: {
-      type: DataTypes.ENUM("upcoming", "completed"),
+      type: DataTypes.ENUM("upcoming", "running", "completed"),
       defaultValue: "upcoming",
     },
     scoreHome: {

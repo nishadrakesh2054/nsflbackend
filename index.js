@@ -167,7 +167,7 @@ const port = process.env.PORT || 3000;
 const startServer = async () => {
   try {
     // Initialize database
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ alter: true });
 
     // Start server
     const server = app.listen(port, () => {

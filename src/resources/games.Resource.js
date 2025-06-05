@@ -307,6 +307,7 @@ export const matchFixtureResource = {
         availableValues: [
           { value: "upcoming", label: "Upcoming" },
           { value: "completed", label: "Completed" },
+          { value: "running", label: "Running" },
           { value: "today", label: "Today" },
         ],
       },
