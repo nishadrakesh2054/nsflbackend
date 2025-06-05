@@ -57,7 +57,8 @@ const admin = new AdminJS({
 admin.watch();
 const auth = {
   authenticate,
-  cookieName: "adminjs",
+  //   cookieName: "adminjs",
+  cookieName: "nsfl.sid",
   cookiePassword: process.env.COOKIE_PASSWORD || "some-secret-password",
 };
 

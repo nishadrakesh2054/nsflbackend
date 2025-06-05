@@ -76,7 +76,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://nsflbackend.onrender.com",
-  " https://nsfl-fullstack.vercel.app",
+  "https://nsfl-fullstack.vercel.app",
 ];
 
 const corsOptions = {
@@ -128,6 +128,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: isProduction,
+      httpOnly: true,
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
@@ -151,7 +153,6 @@ app.use("/api", Contact);
 app.use("/api", News);
 app.use("/api", Match);
 app.use("/api", Table);
-// app.use("/api", Match);
 app.use("/api", LiveStreaming);
 
 // Health check endpoint
