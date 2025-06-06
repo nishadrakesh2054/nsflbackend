@@ -53,7 +53,7 @@ router.get("/blogs/:id", async (req, res) => {
   } catch (error) {
     handleErrorResponse(res, error, "Failed to fetch blog post");
   }
-});
+}); 
 
 // Get all sponsors
 router.get("/sponsors", async (req, res) => {

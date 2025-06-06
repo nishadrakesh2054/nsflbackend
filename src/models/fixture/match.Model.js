@@ -23,9 +23,9 @@ const Match = sequelize.define(
       allowNull: false,
     },
     week: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     status: {
       type: DataTypes.ENUM("upcoming", "running", "completed"),
       defaultValue: "upcoming",
@@ -85,5 +85,4 @@ Match.belongsTo(Team, { foreignKey: "awayTeamId", as: "awayTeam" });
 
 // Add virtual fields for status updates
 
-  
 export default Match;

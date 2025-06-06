@@ -56,7 +56,6 @@ const MatchEvent = sequelize.define(
   {
     tableName: "match_events",
     timestamps: true,
-
   }
 );
 
@@ -72,15 +71,15 @@ MatchEvent.belongsTo(Team, { foreignKey: "teamId" });
 
 //virtual filed added
 MatchEvent.prototype.getMatchInfo = async function () {
-    const match = await Match.findByPk(this.matchId, {
-      include: [
-        { model: Team, as: 'homeTeam' },
-        { model: Team, as: 'awayTeam' },
-      ],
-    });
-  
-    return match
-      ? `${match.homeTeam?.name || 'N/A'} vs ${match.awayTeam?.name || 'N/A'}`
-      : 'Unknown Match';
-  };
+  const match = await Match.findByPk(this.matchId, {
+    include: [
+      { model: Team, as: "homeTeam" },
+      { model: Team, as: "awayTeam" },
+    ],
+  });
+
+  return match
+    ? `${match.homeTeam?.name || "N/A"} vs ${match.awayTeam?.name || "N/A"}`
+    : "Unknown Match";
+};
 export default MatchEvent;

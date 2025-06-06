@@ -456,9 +456,9 @@ export const LiveStreaming = {
       name: "Matches",
       icon: "Video",
     },
-    listProperties: ["id", "youtubeUrl", "matchId", "createdAt", "updatedAt"],
-    editProperties: ["youtubeUrl", "matchId"],
-    showProperties: ["id", "youtubeUrl", "matchId", "createdAt", "updatedAt"],
+    listProperties: ["id", "youtubeUrl", "matchId",'isActive', "createdAt", "updatedAt"],
+    editProperties: ["youtubeUrl", "matchId",'isActive'],
+    showProperties: ["id", "youtubeUrl", "matchId",'isActive', "createdAt", "updatedAt"],
   },
   properties: {
     youtubeUrl: {
@@ -468,6 +468,10 @@ export const LiveStreaming = {
       isVisible: true,
       reference: "matches",
     },
+    isActive: {
+        isVisible: true,
+     
+      },
   },
 };
 

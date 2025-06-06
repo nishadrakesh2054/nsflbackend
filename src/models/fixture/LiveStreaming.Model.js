@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../db/index.js";
 import Match from "./match.Model.js";
+import { extractVideoId} from "../../service/YoutubeService.js";
 
 const LiveStreamingVideo = sequelize.define(
   "LiveStreaming",
@@ -15,11 +16,20 @@ const LiveStreamingVideo = sequelize.define(
       allowNull: false,
       validate: {
         isUrl: true,
+        isYoutubeUrl(value) {
+            if (!extractVideoId(value)) {
+              throw new Error("Invalid YouTube URL");
+            }
+          },
       },
     },
+    // videoId: {
+    //     type: DataTypes.STRING,
+    //     allowNull: true,
+    //   },
     isActive: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: false,
       allowNull: false,
     },
     matchId: {
