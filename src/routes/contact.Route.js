@@ -30,8 +30,6 @@ router.post("/contact", async (req, res) => {
   }
 });
 
-
-
 router.post("/subscribe", async (req, res) => {
   try {
     const { email } = req.body;
