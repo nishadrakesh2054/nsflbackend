@@ -16,7 +16,6 @@ import {
 import {
   gameTeamResource,
   playerResource,
-  MatchEventsResource,
   matchFixtureResource,
   tableResource,
   LiveStreaming,
@@ -29,7 +28,6 @@ const admin = new AdminJS({
     gameTeamResource,
     playerResource,
     matchFixtureResource,
-    MatchEventsResource,
     LiveStreaming,
     tableResource,
     sponserResource,

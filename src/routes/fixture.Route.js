@@ -1,7 +1,6 @@
 import express from "express";
 import Team from "../models/fixture/team.Model.js";
 import Player from "../models/fixture/player.Model.js";
-import MatchEvent  from "../models/fixture/matchEvent.Model.js";
 import Match from "../models/fixture/match.Model.js";
 
 const router = express.Router();
@@ -311,24 +310,7 @@ router.get("/match/:id", async (req, res) => {
             "stadium",
           ],
         },
-        {
-          model: MatchEvent ,
-          as: "events",
-          attributes: ["id", "eventType", "eventTime", "teamId", "playerId"],
-          include: [
-            {
-              model: Player,
-              attributes: [
-                "id",
-                "name",
-                "img",
-                "imageKey",
-                "bucket",
-                "mime",
-              ],
-            },
-          ],
-        },
+      
       ],
     });
 

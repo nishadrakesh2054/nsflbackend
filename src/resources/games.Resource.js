@@ -8,7 +8,6 @@ import Team from "../models/fixture/team.Model.js";
 import Player from "../models/fixture/player.Model.js";
 import Match from "../models/fixture/match.Model.js";
 import Table from "../models/fixture/table.Model.js";
-import MatchEvent from "../models/fixture/matchEvent.Model.js";
 import LiveStreamingVideo from "../models/fixture/LiveStreaming.Model.js";
 
 AdminJS.registerAdapter(AdminJSSequelize);
@@ -351,104 +350,6 @@ export const matchFixtureResource = {
   },
 };
 
-export const MatchEventsResource = {
-  resource: MatchEvent,
-  options: {
-    navigation: { name: "Matches", icon: "BarChart2" },
-    actions: {
-      list: {
-        isAccessible: ({ currentAdmin }) =>
-          currentAdmin && currentAdmin.role === "Admin",
-      },
-      edit: {
-        isAccessible: ({ currentAdmin }) =>
-          currentAdmin && currentAdmin.role === "Admin",
-      },
-      new: {
-        isAccessible: ({ currentAdmin }) =>
-          currentAdmin && currentAdmin.role === "Admin",
-      },
-      show: {
-        isAccessible: ({ currentAdmin }) =>
-          currentAdmin && currentAdmin.role === "Admin",
-      },
-      delete: {
-        isAccessible: ({ currentAdmin }) =>
-          currentAdmin && currentAdmin.role === "Admin",
-      },
-    },
-    listProperties: [
-      "eventType",
-      "eventTime",
-      "matchInfo",
-      "matchId",
-      "playerId",
-      "teamId",
-      "createdAt",
-    ],
-    showProperties: [
-      "id",
-      "eventType",
-      "eventTime",
-      "matchInfo",
-      "matchId",
-      "playerId",
-      "teamId",
-      "createdAt",
-      "updatedAt",
-    ],
-    properties: {
-      eventType: {
-        isVisible: true,
-        availableValues: [
-          { value: "goal", label: "Goal" },
-          { value: "yellow_card", label: "Yellow Card" },
-          { value: "red_card", label: "Red Card" },
-          { value: "own_goal", label: "Own Goal" },
-          { value: "substitution", label: "Substitution" },
-        ],
-        position: 1,
-      },
-      eventTime: {
-        isVisible: true,
-        type: "number",
-        position: 2,
-      },
-      matchId: {
-        isVisible: true,
-        reference: "matches",
-        position: 3,
-      },
-      playerId: {
-        isVisible: true,
-        reference: "Players",
-        position: 4,
-      },
-      teamId: {
-        isVisible: true,
-        reference: "Teams",
-        position: 5,
-      },
-      createdAt: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-        position: 6,
-      },
-      updatedAt: {
-        isVisible: { list: false, show: true, edit: false, filter: false },
-      },
-      deletedAt: {
-        isVisible: false,
-      },
-      matchInfo: {
-        isVisible: { list: true, show: true, edit: false, filter: false },
-        isDisabled: true,
-        type: "string",
-        position: 3,
-      },
-    },
-  },
-};
-
 export const LiveStreaming = {
   resource: LiveStreamingVideo,
   options: {
@@ -456,9 +357,23 @@ export const LiveStreaming = {
       name: "Matches",
       icon: "Video",
     },
-    listProperties: ["id", "youtubeUrl", "matchId",'isActive', "createdAt", "updatedAt"],
-    editProperties: ["youtubeUrl", "matchId",'isActive'],
-    showProperties: ["id", "youtubeUrl", "matchId",'isActive', "createdAt", "updatedAt"],
+    listProperties: [
+      "id",
+      "youtubeUrl",
+      "matchId",
+      "isActive",
+      "createdAt",
+      "updatedAt",
+    ],
+    editProperties: ["youtubeUrl", "matchId", "isActive"],
+    showProperties: [
+      "id",
+      "youtubeUrl",
+      "matchId",
+      "isActive",
+      "createdAt",
+      "updatedAt",
+    ],
   },
   properties: {
     youtubeUrl: {
@@ -469,9 +384,8 @@ export const LiveStreaming = {
       reference: "matches",
     },
     isActive: {
-        isVisible: true,
-     
-      },
+      isVisible: true,
+    },
   },
 };
 
